@@ -1,4 +1,8 @@
 using BlazorWebApp.FileUpload.Components;
+using BlazorWebApp.FileUpload.Model;
+using BlazorWebApp.FileUpload.Services;
+using DotNet8.DbService.Models;
+using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +12,19 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddMudServices();
 
+builder.Services.AddDbContext<AppDbContext>(opt =>
+{
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection"));
+}, ServiceLifetime.Transient, ServiceLifetime.Transient);
+var builderCustomSetting = new ConfigurationBuilder();
+builderCustomSetting
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("customsetting.json", optional: false, reloadOnChange:true);
+IConfiguration configCustomSetting = builderCustomSetting.Build();
+
+builder.Services.Configure<CustomSettingModel>(configCustomSetting.GetSection("CustomSetting"));
+
+builder.Services.AddScoped<FileUploadService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

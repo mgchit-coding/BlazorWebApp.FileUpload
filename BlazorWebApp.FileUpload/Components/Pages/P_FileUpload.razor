@@ -1,19 +1,21 @@
 ﻿@page "/fileUpload"
+@using BlazorWebApp.FileUpload.Model
+@using Newtonsoft.Json
 @rendermode InteractiveServer
 
 <MudStack Style="width: 100%">
-    <MudFileUpload T="IReadOnlyList<IBrowserFile>" 
-        OnFilesChanged="OnInputFileChanged" 
-        AppendMultipleFiles Hidden="false" Class="flex-1" 
-        InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20" 
-        InputStyle="opacity:0"
-        @ondragenter="@SetDragClass" 
-        @ondragleave="@ClearDragClass" 
-        @ondragend="@ClearDragClass">
-         <ButtonTemplate>
-             <MudPaper Height="300px" Outlined="true" Class="@DragClass">
-                 <MudText Typo="Typo.h6">Drag and drop files here or click</MudText>
-                 @foreach (var file in fileNames)
+    <MudFileUpload T="IReadOnlyList<IBrowserFile>"
+                   OnFilesChanged="OnInputFileChanged"
+                   AppendMultipleFiles Hidden="false" Class="flex-1"
+                   InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20"
+                   InputStyle="opacity:0"
+                   @ondragenter="@SetDragClass"
+                   @ondragleave="@ClearDragClass"
+                   @ondragend="@ClearDragClass">
+        <ButtonTemplate>
+            <MudPaper Height="300px" Outlined="true" Class="@DragClass">
+                <MudText Typo="Typo.h6">Drag and drop files here or click</MudText>
+                @foreach (var file in fileNames)
                 {
                     <MudChip Color="Color.Dark" Text="@file" />
                 }
@@ -25,14 +27,69 @@
         <MudButton OnClick="Clear" Disabled="@(!fileNames.Any())" Color="Color.Error" Variant="Variant.Filled">Clear</MudButton>
     </MudToolBar>
 </MudStack>
+
+@if (_meterBillLst is not null)
+{
+    <MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>colum1</MudTh>
+            <MudTh>colum2</MudTh>
+            <MudTh>colum3</MudTh>
+            <MudTh>colum4</MudTh>
+            <MudTh>colum5</MudTh>
+            <MudTh>colum6</MudTh>
+            <MudTh>colum7</MudTh>
+            <MudTh>colum8</MudTh>
+            <MudTh>colum9</MudTh>
+            <MudTh>colum10</MudTh>
+            <MudTh>colum11</MudTh>
+            <MudTh>colum12</MudTh>
+            <MudTh>colum13</MudTh>
+            <MudTh>colum14</MudTh>
+            <MudTh>colum15</MudTh>
+            <MudTh>colum16</MudTh>
+            <MudTh>colum17</MudTh>
+            <MudTh>colum18</MudTh>
+            <MudTh>colum19</MudTh>
+            <MudTh>colum20</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="colum1">@context.colum1</MudTd>
+            <MudTd DataLabel="colum2">@context.colum2</MudTd>
+            <MudTd DataLabel="colum3">@context.colum3</MudTd>
+            <MudTd DataLabel="colum4">@context.colum4</MudTd>
+            <MudTd DataLabel="colum5">@context.colum5</MudTd>
+            <MudTd DataLabel="colum6">@context.colum6</MudTd>
+            <MudTd DataLabel="colum7">@context.colum7</MudTd>
+            <MudTd DataLabel="colum8">@context.colum8</MudTd>
+            <MudTd DataLabel="colum9">@context.colum9</MudTd>
+            <MudTd DataLabel="colum10">@context.colum10</MudTd>
+            <MudTd DataLabel="colum11">@context.colum11</MudTd>
+            <MudTd DataLabel="colum12">@context.colum12</MudTd>
+            <MudTd DataLabel="colum13">@context.colum13</MudTd>
+            <MudTd DataLabel="colum14">@context.colum14</MudTd>
+            <MudTd DataLabel="colum15">@context.colum15</MudTd>
+            <MudTd DataLabel="colum16">@context.colum16</MudTd>
+            <MudTd DataLabel="colum17">@context.colum17</MudTd>
+            <MudTd DataLabel="colum18">@context.colum18</MudTd>
+            <MudTd DataLabel="colum19">@context.colum19</MudTd>
+        </RowTemplate>
+    </MudTable>
+}
 @code {
     private static string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full z-10";
     private string DragClass = DefaultDragClass;
     private List<string> fileNames = new List<string>();
     private byte[] fileContent;
     private IBrowserFile file;
+    private List<MeterBillModel> _meterBillLst = null;
+    private bool _hidePosition;
+    private bool _loading;
+    private IEnumerable<MeterBillModel> Elements = new List<MeterBillModel>();
+    private string _fileBase64Str = "";
+    private string _filePath = "";
 
-    private void OnInputFileChanged(InputFileChangeEventArgs e)
+    private async Task OnInputFileChanged(InputFileChangeEventArgs e)
     {
         file = e.File;
         ClearDragClass();
@@ -41,17 +98,55 @@
         {
             fileNames.Add(file.Name);
         }
+        _fileBase64Str = await GetBase64StrAndFileName(e);
+        var response = await _fileUpload.WriteFileToStorageAsync(file.Name, _fileBase64Str);
+        _meterBillLst = JsonConvert.DeserializeObject<List<MeterBillModel>>(response.Item1);
+        _filePath = response.Item2;
+        Elements = _meterBillLst;
     }
 
-    private void Upload()
+    private async Task<string> GetBase64StrAndFileName(InputFileChangeEventArgs e)
     {
-        
+        string base64Str = "";
+        try
+        {
+            var files = e.GetMultipleFiles();
+            var file = files[0];
+            var stream = file.OpenReadStream(maxAllowedSize: 1024 * 10000);
+            byte[] bytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                await stream.CopyToAsync(memoryStream);
+                bytes = memoryStream.ToArray();
+            }
+            base64Str = Convert.ToBase64String(bytes);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+            throw;
+        }
+
+        return base64Str;
+    }
+
+    private async Task Upload()
+    {
+        var model = new MeterBillViewModel
+            {
+                MeterBillFilePath = _filePath,
+                //MeterBillFileData = _fileBase64Str,
+                CreatedUserId = Guid.NewGuid().ToString()
+            };
+        await _fileUpload.SaveToDb(model);
     }
 
     private async Task Clear()
     {
         fileNames.Clear();
         ClearDragClass();
+        //_fileUpload.DeleteFile(file.Name);
+        Elements = new List<MeterBillModel>();
         await Task.Delay(100);
     }
 
