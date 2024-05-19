@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 
 namespace BlazorWebApp.FileUpload.Services;
 
@@ -43,10 +44,10 @@ public class FileUploadService
         }
     }
 
-    public void DeleteFile(string fileName)
+    public void DeleteFile(string filePath)
     {
-        var path = GetFolderPath();
-        File.Delete($"{path}/{fileName}");
+        //var path = GetFolderPath();
+        File.Delete(filePath);
     }
 
     public string GetFolderPath()
@@ -103,6 +104,7 @@ public class FileUploadService
     }
     public string ConvertExcelToDataTable(string filePath)
     {
+        var stopwatch = Stopwatch.StartNew();
         DataTable dataTable = new DataTable();
         try
         {
@@ -145,6 +147,9 @@ public class FileUploadService
             _logger.LogError(ex.ToString());
             dataTable = new DataTable();
         }
+        var processTime =
+            $"{stopwatch.ElapsedMilliseconds} ms ({TimeSpan.FromMilliseconds(stopwatch.ElapsedMilliseconds).TotalSeconds} seconds)";
+        _logger.LogInformation(processTime);
         return JsonConvert.SerializeObject(dataTable);
     }
 }

@@ -1,6 +1,7 @@
 ﻿@page "/fileUpload"
 @using BlazorWebApp.FileUpload.Model
 @using Newtonsoft.Json
+@inject IDialogService DialogService
 @rendermode InteractiveServer
 
 <MudStack Style="width: 100%">
@@ -23,58 +24,74 @@
         </ButtonTemplate>
     </MudFileUpload>
     <MudToolBar DisableGutters="true" Class="gap-4">
-        <MudButton OnClick="Upload" Disabled="@(!fileNames.Any())" Color="Color.Primary" Variant="Variant.Filled">Upload</MudButton>
-        <MudButton OnClick="Clear" Disabled="@(!fileNames.Any())" Color="Color.Error" Variant="Variant.Filled">Clear</MudButton>
+        @if (!_isSave)
+        {
+            <MudButton OnClick="Upload" Disabled="@(!fileNames.Any())" Color="Color.Primary" Variant="Variant.Filled">Upload</MudButton>
+            <MudButton OnClick="Clear" Disabled="@(!fileNames.Any())" Color="Color.Error" Variant="Variant.Filled">Clear</MudButton>
+        }
+        else
+        {
+            <MudButton OnClick="Save" Color="Color.Primary" Variant="Variant.Filled">Save</MudButton>
+            <MudButton OnClick="Cancel" Color="Color.Error" Variant="Variant.Filled">Cancel</MudButton>
+        }
     </MudToolBar>
 </MudStack>
 
 @if (_meterBillLst is not null)
 {
-    <MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
-        <HeaderContent>
-            <MudTh>colum1</MudTh>
-            <MudTh>colum2</MudTh>
-            <MudTh>colum3</MudTh>
-            <MudTh>colum4</MudTh>
-            <MudTh>colum5</MudTh>
-            <MudTh>colum6</MudTh>
-            <MudTh>colum7</MudTh>
-            <MudTh>colum8</MudTh>
-            <MudTh>colum9</MudTh>
-            <MudTh>colum10</MudTh>
-            <MudTh>colum11</MudTh>
-            <MudTh>colum12</MudTh>
-            <MudTh>colum13</MudTh>
-            <MudTh>colum14</MudTh>
-            <MudTh>colum15</MudTh>
-            <MudTh>colum16</MudTh>
-            <MudTh>colum17</MudTh>
-            <MudTh>colum18</MudTh>
-            <MudTh>colum19</MudTh>
-            <MudTh>colum20</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="colum1">@context.colum1</MudTd>
-            <MudTd DataLabel="colum2">@context.colum2</MudTd>
-            <MudTd DataLabel="colum3">@context.colum3</MudTd>
-            <MudTd DataLabel="colum4">@context.colum4</MudTd>
-            <MudTd DataLabel="colum5">@context.colum5</MudTd>
-            <MudTd DataLabel="colum6">@context.colum6</MudTd>
-            <MudTd DataLabel="colum7">@context.colum7</MudTd>
-            <MudTd DataLabel="colum8">@context.colum8</MudTd>
-            <MudTd DataLabel="colum9">@context.colum9</MudTd>
-            <MudTd DataLabel="colum10">@context.colum10</MudTd>
-            <MudTd DataLabel="colum11">@context.colum11</MudTd>
-            <MudTd DataLabel="colum12">@context.colum12</MudTd>
-            <MudTd DataLabel="colum13">@context.colum13</MudTd>
-            <MudTd DataLabel="colum14">@context.colum14</MudTd>
-            <MudTd DataLabel="colum15">@context.colum15</MudTd>
-            <MudTd DataLabel="colum16">@context.colum16</MudTd>
-            <MudTd DataLabel="colum17">@context.colum17</MudTd>
-            <MudTd DataLabel="colum18">@context.colum18</MudTd>
-            <MudTd DataLabel="colum19">@context.colum19</MudTd>
-        </RowTemplate>
-    </MudTable>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>colum1</th>
+                <th>colum2</th>
+                <th>colum3</th>
+                <th>colum4</th>
+                <th>colum5</th>
+                <th>colum6</th>
+                <th>colum7</th>
+                <th>colum8</th>
+                <th>colum9</th>
+                <th>colum10</th>
+                <th>colum11</th>
+                <th>colum12</th>
+                <th>colum13</th>
+                <th>colum14</th>
+                <th>colum15</th>
+                <th>colum16</th>
+                <th>colum17</th>
+                <th>colum18</th>
+                <th>colum19</th>
+                <th>colum20</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in _meterBillLst.Take(10))
+            {
+                <tr>
+                    <td>@item.colum1</td>
+                    <td>@item.colum2</td>
+                    <td>@item.colum3</td>
+                    <td>@item.colum4</td>
+                    <td>@item.colum5</td>
+                    <td>@item.colum6</td>
+                    <td>@item.colum7</td>
+                    <td>@item.colum8</td>
+                    <td>@item.colum9</td>
+                    <td>@item.colum10</td>
+                    <td>@item.colum11</td>
+                    <td>@item.colum12</td>
+                    <td>@item.colum13</td>
+                    <td>@item.colum14</td>
+                    <td>@item.colum15</td>
+                    <td>@item.colum16</td>
+                    <td>@item.colum17</td>
+                    <td>@item.colum18</td>
+                    <td>@item.colum19</td>
+                    <td>@item.colum20</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 @code {
     private static string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full z-10";
@@ -88,6 +105,7 @@
     private IEnumerable<MeterBillModel> Elements = new List<MeterBillModel>();
     private string _fileBase64Str = "";
     private string _filePath = "";
+    private bool _isSave = false;
 
     private async Task OnInputFileChanged(InputFileChangeEventArgs e)
     {
@@ -99,10 +117,6 @@
             fileNames.Add(file.Name);
         }
         _fileBase64Str = await GetBase64StrAndFileName(e);
-        var response = await _fileUpload.WriteFileToStorageAsync(file.Name, _fileBase64Str);
-        _meterBillLst = JsonConvert.DeserializeObject<List<MeterBillModel>>(response.Item1);
-        _filePath = response.Item2;
-        Elements = _meterBillLst;
     }
 
     private async Task<string> GetBase64StrAndFileName(InputFileChangeEventArgs e)
@@ -132,6 +146,22 @@
 
     private async Task Upload()
     {
+        var response = await _fileUpload.WriteFileToStorageAsync(file.Name, _fileBase64Str);
+        _meterBillLst = JsonConvert.DeserializeObject<List<MeterBillModel>>(response.Item1);
+        _filePath = response.Item2;
+        Elements = _meterBillLst;
+        _isSave = true;
+        StateHasChanged();
+        // var options = new DialogOptions { ClassBackground = "my-custom-class" };
+        // var result =  DialogService.Show<FileUploadDialog>("Simple Dialog", options).Result;
+        // if (!result.IsCanceled)
+        // {
+
+        // }
+    }
+
+    private async Task Save()
+    {
         var model = new MeterBillViewModel
             {
                 MeterBillFilePath = _filePath,
@@ -139,6 +169,13 @@
                 CreatedUserId = Guid.NewGuid().ToString()
             };
         await _fileUpload.SaveToDb(model);
+        await Clear();
+    }
+
+    private async Task Cancel()
+    {
+        _fileUpload.DeleteFile(_filePath);
+        await Clear();
     }
 
     private async Task Clear()
@@ -146,7 +183,8 @@
         fileNames.Clear();
         ClearDragClass();
         //_fileUpload.DeleteFile(file.Name);
-        Elements = new List<MeterBillModel>();
+        // Elements = new List<MeterBillModel>();
+        _meterBillLst = null;
         await Task.Delay(100);
     }
 
@@ -159,4 +197,18 @@
     {
         DragClass = DefaultDragClass;
     }
+
+    //  async IAsyncEnumerable<MeterBillModel> GenerateMeterBillAsync()
+    // {
+    //     foreach (var item in _meterBillLst)
+    //     {
+    //         yield return await ProduceNumberAsync(item);
+    //     }
+    // }
+
+    // private async Task<MeterBillModel> ProduceNumberAsync(MeterBillModel model)
+    // {
+    //     await Task.Delay(1000);
+    //     return model;
+    // }
 }

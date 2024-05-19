@@ -4,12 +4,12 @@
     {
         public string colum1 { get; set; }
         public string colum2 { get; set; }
-        public int colum3 { get; set; }
+        public string colum3 { get; set; }
         public string colum4 { get; set; }
-        public int colum5 { get; set; }
-        public int colum6 { get; set; }
-        public int colum7 { get; set; }
-        public int colum8 { get; set; }
+        public string colum5 { get; set; }
+        public string colum6 { get; set; }
+        public string colum7 { get; set; }
+        public string colum8 { get; set; }
         public int colum9 { get; set; }
         public int colum10 { get; set; }
         public int colum11 { get; set; }

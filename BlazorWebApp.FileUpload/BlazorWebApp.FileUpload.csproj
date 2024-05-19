@@ -1,10 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Remove="Components\Pages\FileUploadDialog.razor" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="MudBlazor" Version="6.19.1" />
@@ -14,6 +18,18 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\DotNet8.DbService\DotNet8.DbService.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <UpToDateCheckInput Remove="Components\Pages\FileUploadDialog.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="Components\Pages\FileUploadDialog.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Components\Pages\FileUploadDialog.razor" />
 	</ItemGroup>
 
 </Project>
