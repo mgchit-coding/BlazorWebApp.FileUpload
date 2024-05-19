@@ -5,7 +5,13 @@ VisualStudioVersion = 17.10.34902.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebApp.FileUpload", "BlazorWebApp.FileUpload\BlazorWebApp.FileUpload.csproj", "{5AD45E1C-0550-45EA-AD1F-F208C14657C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet8.DbService", "DotNet8.DbService\DotNet8.DbService.csproj", "{67859143-1DE1-4FD0-BA1C-1CDBBEEAF183}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet8.DbService", "DotNet8.DbService\DotNet8.DbService.csproj", "{67859143-1DE1-4FD0-BA1C-1CDBBEEAF183}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Document", "Document", "{EF46B0F6-5192-470C-AC99-F6E7CB175801}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\..\..\Backup\MeterBill.xlsx = ..\..\..\..\..\Backup\MeterBill.xlsx
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
