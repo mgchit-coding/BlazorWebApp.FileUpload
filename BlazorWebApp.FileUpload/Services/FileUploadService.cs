@@ -147,6 +147,7 @@ public class FileUploadService
             _logger.LogError(ex.ToString());
             dataTable = new DataTable();
         }
+        stopwatch.Stop();
         var processTime =
             $"{stopwatch.ElapsedMilliseconds} ms ({TimeSpan.FromMilliseconds(stopwatch.ElapsedMilliseconds).TotalSeconds} seconds)";
         _logger.LogInformation(processTime);
